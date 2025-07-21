@@ -101,9 +101,6 @@ export default function AuthPage() {
       const { data, error } = await supabase.auth.signUp({
         email: signupData.email.trim(),
         password: signupData.password,
-        options: {
-          emailRedirectTo: undefined, // Disable email confirmation
-        },
       })
 
       if (error) throw error
