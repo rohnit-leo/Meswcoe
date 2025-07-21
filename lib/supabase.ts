@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
 
-// Your actual Supabase credentials
 const supabaseUrl = "https://outsfyaqtogswgcbbrlw.supabase.co"
 const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91dHNmeWFxdG9nc3dnY2Jicmx3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMjUyODcsImV4cCI6MjA2ODcwMTI4N30.aXVRtnkfM9ncQIJHjSdkcClbFhqjWpQdyrzI1Qphg3Y"
@@ -9,11 +8,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false, // Disable email confirmation redirect
+    detectSessionInUrl: false,
+    flowType: "implicit",
   },
 })
 
-// Enhanced Database types
+// Database types remain the same...
 export interface User {
   id: string
   email: string
@@ -125,75 +125,19 @@ export interface JobPosting {
   updated_at: string
 }
 
-export interface StudyMaterial {
-  id: string
-  title: string
-  description?: string
-  subject: string
-  branch?: string
-  semester?: number
-  material_type: "notes" | "books" | "videos" | "assignments" | "papers"
-  file_url?: string
-  download_count: number
-  rating: number
-  uploaded_by?: string
-  approved: boolean
-  tags?: string[]
-  created_at: string
-  updated_at: string
-}
-
-export interface Club {
-  id: string
-  name: string
-  description?: string
-  club_type: "technical" | "cultural" | "sports" | "social"
-  logo_url?: string
-  president_id?: string
-  vice_president_id?: string
-  secretary_id?: string
-  faculty_coordinator_id?: string
-  established_year?: number
-  member_count: number
-  active: boolean
-  contact_email?: string
-  social_links?: any
-  created_at: string
-  updated_at: string
-}
-
-export interface AlumniProfile {
-  id: string
-  user_id: string
-  current_company?: string
-  current_position?: string
-  industry?: string
-  experience_years?: number
-  achievements?: string
-  mentoring_available: boolean
-  contact_preference: "email" | "linkedin" | "phone"
-  visibility: "public" | "alumni_only" | "private"
-  created_at: string
-  updated_at: string
-  users?: User
-}
-
-// Helper functions for database operations
+// Helper functions remain the same...
 export const createUserProfile = async (userData: Partial<User>) => {
   const { data, error } = await supabase.from("users").insert([userData]).select().single()
-
   return { data, error }
 }
 
 export const getUserProfile = async (userId: string) => {
   const { data, error } = await supabase.from("users").select("*").eq("id", userId).single()
-
   return { data, error }
 }
 
 export const updateUserProfile = async (userId: string, updates: Partial<User>) => {
   const { data, error } = await supabase.from("users").update(updates).eq("id", userId).select().single()
-
   return { data, error }
 }
 
@@ -223,6 +167,5 @@ export const sendMessage = async (messageData: {
   anonymous: boolean
 }) => {
   const { data, error } = await supabase.from("messages").insert([messageData]).select().single()
-
   return { data, error }
 }

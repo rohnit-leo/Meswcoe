@@ -2,93 +2,86 @@
 
 import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
-import { Bell, Star, Calendar, Trophy, Users, Zap } from "lucide-react"
+import { Bell, Calendar, Users, BookOpen, Award, Briefcase } from "lucide-react"
 
 const announcements = [
   {
     id: 1,
-    text: "🎓 Admissions Open for 2025-26 Batch - Apply Now!",
+    text: "Admission Process 2025-26 Started - Apply through DTE Maharashtra CAP process",
     type: "admission",
-    icon: Bell,
-    color: "bg-gradient-to-r from-blue-50 to-indigo-50",
+    icon: <BookOpen className="h-4 w-4" />,
+    color: "bg-blue-500",
   },
   {
     id: 2,
-    text: "🏆 MESCOE wins Best Engineering College Award 2024",
-    type: "achievement",
-    icon: Trophy,
-    color: "bg-gradient-to-r from-amber-50 to-yellow-50",
+    text: "ACCET-2025 Technical Symposium on March 15, 2025 - Register now for competitions and workshops",
+    type: "event",
+    icon: <Calendar className="h-4 w-4" />,
+    color: "bg-green-500",
   },
   {
     id: 3,
-    text: "📅 Tech Fest ACCET 2025 - March 15-17, Register Now!",
-    type: "event",
-    icon: Calendar,
-    color: "bg-gradient-to-r from-purple-50 to-pink-50",
+    text: "Placement Drive by TCS on February 5, 2025 - Final year students can register",
+    type: "placement",
+    icon: <Briefcase className="h-4 w-4" />,
+    color: "bg-purple-500",
   },
   {
     id: 4,
-    text: "⚡ 95% Placement Record Achieved - Highest in Pune!",
-    type: "placement",
-    icon: Zap,
-    color: "bg-gradient-to-r from-green-50 to-emerald-50",
+    text: "RACE-2025 Cultural Festival on February 20, 2025 - Inter-college competitions in music, dance, and drama",
+    type: "cultural",
+    icon: <Users className="h-4 w-4" />,
+    color: "bg-orange-500",
   },
   {
     id: 5,
-    text: "👥 Join 5000+ Alumni Network - Connect & Grow Together",
-    type: "community",
-    icon: Users,
-    color: "bg-gradient-to-r from-cyan-50 to-blue-50",
+    text: "Library Timing Extended during examination period - 8:00 AM to 10:00 PM on weekdays",
+    type: "notice",
+    icon: <Bell className="h-4 w-4" />,
+    color: "bg-cyan-500",
   },
   {
     id: 6,
-    text: "⭐ NBA Accreditation Renewed - Quality Education Assured",
-    type: "accreditation",
-    icon: Star,
-    color: "bg-gradient-to-r from-rose-50 to-pink-50",
+    text: "Faculty Development Program on Emerging Technologies - February 10-14, 2025",
+    type: "academic",
+    icon: <Award className="h-4 w-4" />,
+    color: "bg-indigo-500",
   },
 ]
 
-export function ScrollingAnnouncements() {
+export default function ScrollingAnnouncements() {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % announcements.length)
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % announcements.length)
     }, 4000)
 
     return () => clearInterval(interval)
   }, [])
 
   const currentAnnouncement = announcements[currentIndex]
-  const IconComponent = currentAnnouncement.icon
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-50 border-b border-slate-200 z-50">
-      {/* Main Announcement Bar */}
-      <div className="relative flex items-center justify-center py-2 px-4">
-        <div className="flex items-center gap-3 text-slate-700 animate-fade-in">
-          <div className={`p-1.5 rounded-full bg-slate-100 shadow-sm`}>
-            <IconComponent className="h-3 w-3 text-slate-600" />
+    <div className="bg-gradient-to-r from-slate-800 to-blue-800 text-white py-3 px-4 shadow-lg">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-center gap-4 animate-fade-in">
+          <div className={`p-2 rounded-full ${currentAnnouncement.color} shadow-lg`}>{currentAnnouncement.icon}</div>
+          <div className="flex-1 text-center">
+            <p className="text-sm md:text-base font-medium leading-relaxed">{currentAnnouncement.text}</p>
           </div>
-
-          <span className="font-medium text-sm text-center">{currentAnnouncement.text}</span>
-
-          <Badge
-            variant="outline"
-            className="bg-slate-100 text-slate-600 border-slate-200 text-xs hidden sm:inline-flex"
-          >
-            {currentAnnouncement.type.toUpperCase()}
+          <Badge variant="outline" className="bg-white/10 text-white border-white/20 hidden md:block">
+            {currentAnnouncement.type.charAt(0).toUpperCase() + currentAnnouncement.type.slice(1)}
           </Badge>
         </div>
 
-        {/* Progress Indicators */}
-        <div className="absolute right-4 flex gap-1">
+        {/* Progress indicators */}
+        <div className="flex justify-center mt-3 gap-2">
           {announcements.map((_, index) => (
             <div
               key={index}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                index === currentIndex ? "bg-slate-400 scale-125" : "bg-slate-300 hover:bg-slate-400"
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex ? "bg-white" : "bg-white/30"
               }`}
             />
           ))}

@@ -56,13 +56,67 @@ export default function ChatPage() {
   const router = useRouter()
 
   useEffect(() => {
-    getUser()
-    fetchMessages()
-    subscribeToMessages()
+    checkAuthAndFetchData()
+  }, [])
 
-    // Simulate online users
-    setOnlineUsers(Math.floor(Math.random() * 50) + 15)
-  }, [activeChannel])
+  useEffect(() => {
+    if (user) {
+      fetchMessages()
+      subscribeToMessages()
+    }
+  }, [activeChannel, user])
+
+  const checkAuthAndFetchData = async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session?.user) {
+        setLoading(false)
+        return
+      }
+
+      // Get or create user profile
+      let { data: userData, error } = await supabase.from("users").select("*").eq("id", session.user.id).single()
+
+      if (error && error.code === "PGRST116") {
+        // User doesn't exist, create profile
+        const { data: newUser, error: createError } = await supabase
+          .from("users")
+          .insert([
+            {
+              id: session.user.id,
+              email: session.user.email!,
+              name: session.user.user_metadata?.name || session.user.email?.split("@")[0],
+              role: "prospective",
+              is_verified: true,
+              last_active: new Date().toISOString(),
+            },
+          ])
+          .select()
+          .single()
+
+        if (createError) {
+          console.error("Error creating user profile:", createError)
+          setLoading(false)
+          return
+        }
+        userData = newUser
+      } else if (error) {
+        console.error("Error fetching user:", error)
+        setLoading(false)
+        return
+      }
+
+      setUser(userData)
+      setOnlineUsers(Math.floor(Math.random() * 50) + 15)
+      setLoading(false)
+    } catch (error) {
+      console.error("Auth check error:", error)
+      setLoading(false)
+    }
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -72,21 +126,9 @@ export default function ChatPage() {
     scrollToBottom()
   }, [messages])
 
-  const getUser = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-    if (session?.user) {
-      const { data: userData } = await supabase.from("users").select("*").eq("id", session.user.id).single()
-
-      setUser(userData)
-      setLoading(false)
-    } else {
-      setLoading(false)
-    }
-  }
-
   const fetchMessages = async () => {
+    if (!user) return
+
     try {
       const { data, error } = await supabase
         .from("messages")
@@ -111,6 +153,8 @@ export default function ChatPage() {
   }
 
   const subscribeToMessages = () => {
+    if (!user) return
+
     const channel = supabase
       .channel("messages")
       .on(
@@ -122,7 +166,6 @@ export default function ChatPage() {
           filter: `channel=eq.${activeChannel}`,
         },
         async (payload) => {
-          // Fetch the complete message with user data
           const { data } = await supabase
             .from("messages")
             .select(`
@@ -215,10 +258,10 @@ export default function ChatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-cyan-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <MessageCircle className="h-16 w-16 text-cyan-500 mx-auto mb-4 animate-pulse" />
-          <p className="text-xl text-gray-600">Loading chat...</p>
+          <MessageCircle className="h-16 w-16 text-blue-500 mx-auto mb-4 animate-pulse" />
+          <p className="text-xl text-slate-600">Loading chat...</p>
         </div>
       </div>
     )
@@ -226,24 +269,24 @@ export default function ChatPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 flex items-center justify-center py-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center py-12 px-4">
         <Card className="max-w-md w-full text-center shadow-2xl bg-white/80 backdrop-blur-sm border-0">
           <CardHeader>
-            <div className="w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <MessageCircle className="h-10 w-10 text-white" />
             </div>
-            <CardTitle className="text-2xl bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+            <CardTitle className="text-2xl bg-gradient-to-r from-slate-800 to-blue-700 bg-clip-text text-transparent">
               Join the MESCOE Community
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <p className="text-slate-600 mb-6 leading-relaxed">
               Connect with current students, alumni, and faculty. Get answers to your questions and share your
               experiences in our vibrant community.
             </p>
             <Button
               onClick={() => router.push("/auth")}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-3 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+              className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold py-3 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
             >
               Login to Join Chat
             </Button>
@@ -254,16 +297,17 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-cyan-50 py-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <div className="inline-block bg-gradient-to-r from-cyan-100 to-blue-100 px-4 py-2 rounded-full text-cyan-700 font-medium mb-4">
+          <div className="inline-block bg-gradient-to-r from-blue-100 to-indigo-100 px-4 py-2 rounded-full text-blue-700 font-medium mb-4">
+            <MessageCircle className="inline h-5 w-5 mr-2" />
             Community Chat
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-blue-700 bg-clip-text text-transparent mb-4">
             MESCOE Connect Community
           </h1>
-          <p className="text-xl text-gray-600">Connect, learn, and grow together with the MESCOE family</p>
+          <p className="text-xl text-slate-600">Connect, learn, and grow together with the MESCOE family</p>
         </div>
 
         <div className="grid lg:grid-cols-4 gap-6">
@@ -272,7 +316,7 @@ export default function ChatPage() {
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Hash className="h-5 w-5 text-cyan-500" />
+                  <Hash className="h-5 w-5 text-blue-500" />
                   Channels
                 </CardTitle>
               </CardHeader>
@@ -283,8 +327,8 @@ export default function ChatPage() {
                     onClick={() => setActiveChannel(channel.id)}
                     className={`w-full text-left p-4 rounded-xl transition-all duration-300 ${
                       activeChannel === channel.id
-                        ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg transform scale-105"
-                        : "hover:bg-gray-100 text-gray-700"
+                        ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg transform scale-105"
+                        : "hover:bg-slate-100 text-slate-700"
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-1">
@@ -312,7 +356,7 @@ export default function ChatPage() {
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                     <span className="text-sm font-medium">{onlineUsers} users online</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                  <div className="grid grid-cols-2 gap-2 text-xs text-slate-600">
                     <div>Students: {Math.floor(onlineUsers * 0.6)}</div>
                     <div>Alumni: {Math.floor(onlineUsers * 0.25)}</div>
                     <div>Faculty: {Math.floor(onlineUsers * 0.15)}</div>
@@ -332,7 +376,7 @@ export default function ChatPage() {
           {/* Chat Area */}
           <div className="lg:col-span-3">
             <Card className="h-[700px] flex flex-col shadow-2xl border-0 bg-white/90 backdrop-blur-md">
-              <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-t-lg">
+              <CardHeader className="border-b border-slate-100 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-t-lg">
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
                     <Hash className="h-5 w-5" />
@@ -347,17 +391,17 @@ export default function ChatPage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-cyan-100 opacity-90">
+                <p className="text-sm text-blue-100 opacity-90">
                   {channels.find((c) => c.id === activeChannel)?.description}
                 </p>
               </CardHeader>
 
               {/* Messages */}
-              <CardContent className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-gray-50 to-white">
+              <CardContent className="flex-1 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-slate-50 to-white">
                 {messages.length === 0 ? (
                   <div className="text-center py-16">
-                    <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-lg">No messages yet. Start the conversation!</p>
+                    <MessageCircle className="h-16 w-16 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-500 text-lg">No messages yet. Start the conversation!</p>
                   </div>
                 ) : (
                   messages.map((message) => (
@@ -365,20 +409,20 @@ export default function ChatPage() {
                       key={message.id}
                       className="flex gap-4 group hover:bg-blue-50/50 p-3 rounded-xl transition-colors"
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
                         <span className="text-sm font-bold text-white">
                           {getDisplayName(message).charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2 flex-wrap">
-                          <span className="font-bold text-gray-800 text-sm">{getDisplayName(message)}</span>
+                          <span className="font-bold text-slate-800 text-sm">{getDisplayName(message)}</span>
                           <Badge variant="outline" className={`text-xs ${getRoleColor(message.users?.role || "user")}`}>
                             {getRoleLabel(message.users?.role || "user")}
                           </Badge>
-                          <span className="text-xs text-gray-500">{formatTime(message.created_at)}</span>
+                          <span className="text-xs text-slate-500">{formatTime(message.created_at)}</span>
                         </div>
-                        <p className="text-gray-700 text-sm leading-relaxed mb-3">{message.content}</p>
+                        <p className="text-slate-700 text-sm leading-relaxed mb-3">{message.content}</p>
                         <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button variant="ghost" size="sm" className="h-8 px-3 text-xs hover:bg-blue-100">
                             <ThumbsUp className="h-3 w-3 mr-1" />
@@ -401,9 +445,9 @@ export default function ChatPage() {
               </CardContent>
 
               {/* Message Input */}
-              <div className="border-t border-gray-100 p-6 bg-white rounded-b-lg">
+              <div className="border-t border-slate-100 p-6 bg-white rounded-b-lg">
                 <div className="flex gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center flex-shrink-0">
                     <span className="text-sm font-bold text-white">
                       {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
                     </span>
@@ -414,21 +458,21 @@ export default function ChatPage() {
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                      className="border-2 border-gray-200 focus:border-cyan-400 rounded-xl py-3 px-4 text-sm"
+                      className="border-2 border-slate-200 focus:border-blue-400 rounded-xl py-3 px-4 text-sm"
                     />
                     <div className="flex items-center justify-between mt-3">
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-slate-500">
                         {isAnonymous
-                          ? "💭 Posting as Anonymous"
-                          : `📝 Posting as ${user?.name || user?.email?.split("@")[0]}`}
+                          ? "Posting as Anonymous"
+                          : `Posting as ${user?.name || user?.email?.split("@")[0]}`}
                       </p>
-                      <p className="text-xs text-gray-500">Press Enter to send</p>
+                      <p className="text-xs text-slate-500">Press Enter to send</p>
                     </div>
                   </div>
                   <Button
                     onClick={handleSendMessage}
                     disabled={!newMessage.trim()}
-                    className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-6 py-3 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+                    className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
                   >
                     <Send className="h-4 w-4" />
                   </Button>
