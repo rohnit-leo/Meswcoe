@@ -1,0 +1,304 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 188 100% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 45 100% 58%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 98%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 188 100% 42%;
+    --radius: 0.75rem;
+    --chart-1: 188 100% 42%;
+    --chart-2: 45 100% 58%;
+    --chart-3: 210 40% 98%;
+    --chart-4: 215.4 16.3% 46.9%;
+    --chart-5: 0 84.2% 60.2%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 188 100% 42%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 45 100% 58%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 188 100% 42%;
+    --chart-1: 188 100% 42%;
+    --chart-2: 45 100% 58%;
+    --chart-3: 217.2 32.6% 17.5%;
+    --chart-4: 215 20.2% 65.1%;
+    --chart-5: 0 62.8% 30.6%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  .btn-gradient {
+    @apply bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent;
+  }
+
+  .glassmorphism {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-lg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-cyan-400 rounded-lg;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-cyan-500;
+}
+
+/* Enhanced Custom animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes gradient {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+.animate-gradient {
+  animation: gradient 15s ease infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.8s ease-out forwards;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 1s ease-out forwards;
+}
+
+/* Delay classes */
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.delay-700 {
+  animation-delay: 700ms;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.delay-1500 {
+  animation-delay: 1500ms;
+}
+
+.delay-2000 {
+  animation-delay: 2000ms;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply w-8 h-8 border-4 border-cyan-200 border-t-cyan-500 rounded-full animate-spin;
+}
+
+/* Enhanced button styles */
+.btn-mescoe {
+  @apply bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300;
+}
+
+.btn-mescoe-secondary {
+  @apply bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-semibold py-3 px-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300;
+}
+
+/* Enhanced card styles */
+.card-mescoe {
+  @apply bg-white/90 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300;
+}
+
+/* Enhanced focus styles */
+.focus-mescoe {
+  @apply focus:outline-none focus:ring-4 focus:ring-cyan-500/20 focus:border-cyan-500;
+}
+
+/* Responsive text */
+.text-responsive {
+  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl;
+}
+
+.text-responsive-sm {
+  @apply text-sm sm:text-base md:text-lg;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+
+  .text-responsive-mobile {
+    @apply text-base sm:text-lg md:text-xl;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 768px) {
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Enhanced glassmorphism effects */
+.glass-card {
+  @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl;
+}
+
+.glass-card-dark {
+  @apply bg-black/10 backdrop-blur-md border border-black/20 shadow-2xl;
+}
+
+/* Improved mobile spacing */
+@media (max-width: 640px) {
+  .mobile-spacing {
+    @apply space-y-4;
+  }
+
+  .mobile-padding {
+    @apply p-4;
+  }
+
+  .mobile-margin {
+    @apply m-4;
+  }
+}
