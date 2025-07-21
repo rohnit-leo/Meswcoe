@@ -97,34 +97,18 @@ export default function AuthPage() {
     }
 
     try {
-      // Sign up with Supabase Auth - completely disable email confirmation
+      // Sign up with Supabase Auth (no email confirmation required)
       const { data, error } = await supabase.auth.signUp({
         email: signupData.email.trim(),
         password: signupData.password,
         options: {
-          emailRedirectTo: undefined, // No email confirmation
-          data: {
-            email_confirm: false, // Disable email confirmation
-          },
+          emailRedirectTo: undefined, // Disable email confirmation
         },
       })
 
       if (error) throw error
 
       if (data.user) {
-        // Immediately confirm the user manually if needed
-        if (!data.user.email_confirmed_at) {
-          // Force confirm the user by signing them in immediately
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email: signupData.email.trim(),
-            password: signupData.password,
-          })
-
-          if (signInError) {
-            console.error("Auto sign-in error:", signInError)
-          }
-        }
-
         // Create detailed user profile in users table
         const { error: profileError } = await supabase.from("users").insert([
           {
@@ -145,10 +129,10 @@ export default function AuthPage() {
 
         setMessage({
           type: "success",
-          text: "🎉 Account created successfully! You are now logged in and can explore MESCOE Connect!",
+          text: "🎉 Account created successfully! You can now login and explore MESCOE Connect!",
         })
 
-        // Reset form
+        // Reset form and switch to login tab
         setSignupData({
           email: "",
           password: "",
@@ -161,13 +145,19 @@ export default function AuthPage() {
           city: "",
         })
 
-        // Redirect to home page after successful signup
-        setTimeout(() => {
-          router.push("/")
+        // Auto login after successful signup
+        setTimeout(async () => {
+          const { error: loginError } = await supabase.auth.signInWithPassword({
+            email: signupData.email.trim(),
+            password: signupData.password,
+          })
+
+          if (!loginError) {
+            router.push("/")
+          }
         }, 2000)
       }
     } catch (error: any) {
-      console.error("Signup error:", error)
       setMessage({ type: "error", text: error.message || "❌ Signup failed. Please try again." })
     } finally {
       setIsLoading(false)
