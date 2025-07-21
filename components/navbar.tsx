@@ -74,7 +74,7 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16 lg:h-18">
-          {/* Enhanced Logo */}
+          {/* Enhanced Logo - Single Line */}
           <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-all duration-300 group">
             <div className="relative">
               <Image
@@ -85,11 +85,10 @@ export function Navbar() {
                 className="relative drop-shadow-sm group-hover:scale-110 transition-transform duration-300"
               />
             </div>
-            <div>
-              <span className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-slate-700 to-slate-600 bg-clip-text text-transparent">
+            <div className="flex items-center">
+              <span className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent tracking-tight">
                 MESCOE Connect
               </span>
-              <div className="text-xs text-slate-500 font-medium">Powered by NextureX</div>
             </div>
           </Link>
 
@@ -162,8 +161,9 @@ export function Navbar() {
                 <div className="flex items-center space-x-3 pb-6 border-b border-slate-200">
                   <Image src="/images/mescoe-logo.png" alt="MESCOE Logo" width={35} height={35} />
                   <div>
-                    <div className="font-bold text-slate-700">MESCOE Connect</div>
-                    <div className="text-xs text-slate-500">Powered by NextureX</div>
+                    <div className="font-black text-xl bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
+                      MESCOE Connect
+                    </div>
                   </div>
                 </div>
 
