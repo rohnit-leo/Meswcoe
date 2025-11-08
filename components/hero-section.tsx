@@ -41,7 +41,7 @@ export default function HeroSection() {
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  MESCOE
+                  MESWCOE
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-slate-600 font-medium">
