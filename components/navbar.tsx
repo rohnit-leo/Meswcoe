@@ -88,7 +88,7 @@ export function Navbar() {
             </div>
             <div className="flex items-center">
               <span className="text-2xl lg:text-3xl font-black bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent tracking-tight">
-                MESCOE Connect
+                MESWCOE Connect
               </span>
             </div>
           </Link>

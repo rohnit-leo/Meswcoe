@@ -130,7 +130,7 @@ export default function HeroSection() {
           <div className="relative animate-fade-in delay-500">
             <div className="relative z-10 bg-white rounded-2xl shadow-2xl p-2 overflow-hidden">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_3784.PNG-5oongggkhoFOujxtS3W6tlPqFv3OlN.jpeg"
+                src="/images/design-mode/IMG_3784.PNG.jpeg"
                 alt="MESCOE College Building"
                 width={500}
                 height={400}
