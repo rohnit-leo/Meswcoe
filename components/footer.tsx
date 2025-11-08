@@ -98,7 +98,7 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400 text-sm">
             © 2025 MESCOE Connect. All rights reserved. |<span className="text-blue-400"> Powered by NextureX</span> |
-            <span className="text-yellow-400"> Built by Rohnit Gitay (ENTC 2025)</span>
+            <span className="text-yellow-400">  (ENTC 2025)</span>
           </p>
         </div>
       </div>
