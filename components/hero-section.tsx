@@ -1,5 +1,11 @@
 "use client"
 
+import { useEffect } from "react"
+
+import { useRef } from "react"
+
+import { useState } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ArrowRight, Users, Award, BookOpen, TrendingUp } from "lucide-react"
@@ -13,16 +19,16 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
 
       {/* Floating Elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-float"></div>
-      <div className="absolute top-40 right-20 w-16 h-16 bg-indigo-200 rounded-full opacity-20 animate-float-delayed"></div>
-      <div className="absolute bottom-20 left-20 w-24 h-24 bg-cyan-200 rounded-full opacity-20 animate-float"></div>
+      <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-float delay-300"></div>
+      <div className="absolute top-40 right-20 w-16 h-16 bg-indigo-200 rounded-full opacity-20 animate-float delay-700"></div>
+      <div className="absolute bottom-20 left-20 w-24 h-24 bg-cyan-200 rounded-full opacity-20 animate-float delay-1000"></div>
 
       <div className="container mx-auto px-4 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
-          <div className="text-center lg:text-left space-y-8">
+          <div className="text-center lg:text-left space-y-8 animate-fade-in">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 px-6 py-3 rounded-full text-blue-700 font-medium shadow-lg">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-indigo-100 px-6 py-3 rounded-full text-blue-700 font-medium shadow-lg animate-slide-in">
               <Award className="h-5 w-5" />
               <span>Established 1999 | NBA Accredited</span>
             </div>
@@ -47,34 +53,38 @@ export default function HeroSection() {
               </p>
             </div>
 
-            {/* Stats */}
+            {/* Stats with Counting Animation */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
+              <div className="text-center animate-bounce-in">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Users className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-2xl font-bold text-slate-800">5000+</div>
+                <div className="text-2xl font-bold text-slate-800">
+                  <CountingStatistic from={0} to={5000} suffix="+" />
+                </div>
                 <div className="text-sm text-slate-600">Students</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-bounce-in delay-300">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <BookOpen className="h-6 w-6 text-white" />
                 </div>
                 <div className="text-2xl font-bold text-slate-800">6</div>
                 <div className="text-sm text-slate-600">Branches</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-bounce-in delay-500">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Award className="h-6 w-6 text-white" />
                 </div>
                 <div className="text-2xl font-bold text-slate-800">25+</div>
                 <div className="text-sm text-slate-600">Years</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-bounce-in delay-700">
                 <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-2">
                   <TrendingUp className="h-6 w-6 text-white" />
                 </div>
-                <div className="text-2xl font-bold text-slate-800">85%+</div>
+                <div className="text-2xl font-bold text-slate-800">
+                  <CountingStatistic from={0} to={85} suffix="%" />
+                </div>
                 <div className="text-sm text-slate-600">Placement</div>
               </div>
             </div>
@@ -88,13 +98,13 @@ export default function HeroSection() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/calculator">
+              <Link href="/student-portal">
                 <Button
                   variant="outline"
                   className="border-2 border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-600 font-semibold px-8 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 bg-transparent"
                 >
                   <TrendingUp className="mr-2 h-5 w-5" />
-                  Fee Calculator
+                  Student Portal
                 </Button>
               </Link>
             </div>
@@ -117,11 +127,11 @@ export default function HeroSection() {
           </div>
 
           {/* Right Content - Image */}
-          <div className="relative">
-            <div className="relative z-10 bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+          <div className="relative animate-fade-in delay-500">
+            <div className="relative z-10 bg-white rounded-2xl shadow-2xl p-2 overflow-hidden">
               <Image
-                src="/images/mescoe-logo.png"
-                alt="MESCOE College Campus"
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_3784.PNG-5oongggkhoFOujxtS3W6tlPqFv3OlN.jpeg"
+                alt="MESCOE College Building"
                 width={500}
                 height={400}
                 className="rounded-xl object-cover w-full h-80"
@@ -133,10 +143,55 @@ export default function HeroSection() {
             </div>
 
             {/* Background decoration */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-2xl transform -rotate-3 opacity-20"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-200 to-indigo-200 rounded-2xl opacity-20"></div>
           </div>
         </div>
       </div>
     </section>
+  )
+}
+
+function CountingStatistic({ from, to, suffix }: { from: number; to: number; suffix?: string }) {
+  const [count, setCount] = useState(from)
+  const nodeRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let current = from
+    const increment = (to - from) / 120
+
+    const animate = () => {
+      current += increment
+      if (current >= to) {
+        setCount(to)
+      } else {
+        setCount(Math.floor(current))
+        setTimeout(animate, 16)
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          animate()
+          observer.unobserve(nodeRef.current!)
+        }
+      },
+      { threshold: 0.1 },
+    )
+
+    if (nodeRef.current) {
+      observer.observe(nodeRef.current)
+    }
+
+    return () => {
+      if (nodeRef.current) observer.unobserve(nodeRef.current)
+    }
+  }, [])
+
+  return (
+    <div ref={nodeRef}>
+      {count}
+      {suffix}
+    </div>
   )
 }

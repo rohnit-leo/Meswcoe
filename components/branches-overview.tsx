@@ -65,10 +65,10 @@ const branches = [
 
 export function BranchesOverview() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="inline-block bg-gradient-to-r from-cyan-100 to-yellow-100 px-4 py-2 rounded-full text-cyan-700 font-medium mb-4">
+        <div className="text-center mb-16 animate-fade-in">
+          <div className="inline-block bg-gradient-to-r from-cyan-100 to-yellow-100 px-4 py-2 rounded-full text-cyan-700 font-medium mb-4 animate-slide-in">
             Engineering Programs
           </div>
           <h2 className="text-5xl font-bold bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent mb-6">
@@ -86,7 +86,8 @@ export function BranchesOverview() {
             return (
               <Card
                 key={branch.id}
-                className="group relative overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-gradient-to-br from-white to-gray-50 border-0 shadow-lg"
+                className={`group relative overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 bg-gradient-to-br from-white to-gray-50 border-0 shadow-lg animate-bounce-in`}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${branch.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}

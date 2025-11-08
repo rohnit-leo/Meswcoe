@@ -21,11 +21,12 @@ const navigation = [
       { name: "Mechanical Engineering", href: "/branches/mechanical" },
     ],
   },
+  { name: "Academic Hub", href: "/academic-hub" },
+  { name: "Events", href: "/events" },
   { name: "Calculator", href: "/calculator" },
   { name: "Chat", href: "/chat" },
   { name: "Jobs", href: "/jobs" },
   { name: "Campus Tour", href: "/campus-tour" },
-  { name: "Events", href: "/events" },
   { name: "Shop", href: "/shop" },
   { name: "About", href: "/about" },
 ]

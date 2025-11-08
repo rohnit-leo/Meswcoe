@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "MESCOE Connect - Powered by NextureX",
   description:
     "Modern Education Society's College of Engineering, Pune - Engineering Admissions, Student Community & More",
-    generator: 'v0.dev'
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
