@@ -136,7 +136,7 @@ export default function HeroSection() {
                 height={400}
                 className="rounded-xl object-cover w-full h-80"
               />
-              <div className="absolute -top-4 -right-4 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+              <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-20 whitespace-nowrap">
                 <Award className="inline h-4 w-4 mr-1" />
                 Top Engineering College
               </div>
